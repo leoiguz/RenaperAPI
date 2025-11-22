@@ -1,0 +1,105 @@
+--------------------------------------------------------- Crear Base de Datos Renaper -------------------------------------------------------------------------------
+CREATE TABLE Personas (
+    -- Identificador único interno de la base de datos
+    IdPersona INT IDENTITY(1,1) PRIMARY KEY,
+
+    -- Datos de Identidad
+    DNI INT NOT NULL UNIQUE,              -- DNI numérico (sin puntos)
+    Apellido NVARCHAR(100) NOT NULL,      -- Soporta tildes y ñ
+    Nombres NVARCHAR(100) NOT NULL,
+    Sexo CHAR(1) NOT NULL,                -- M, F, X
+    CUIL VARCHAR(13),                     -- Formato con guiones: 20-12345678-9
+
+    -- Nacimiento
+    FechaNacimiento DATE NOT NULL,
+    Nacionalidad NVARCHAR(50) DEFAULT 'Argentina',
+
+    -- Domicilio (Según figura en DNI)
+    Calle NVARCHAR(100),
+    Altura NVARCHAR(20),                  -- Puede ser "S/N" o "123 Bis"
+    Piso NVARCHAR(10),
+    Departamento NVARCHAR(10),
+    CodigoPostal VARCHAR(10),
+    Localidad NVARCHAR(100),
+    Provincia NVARCHAR(100),
+
+    -- Datos del Trámite / Documento
+    NumeroTramite VARCHAR(20) NOT NULL,   -- El número de 11 dígitos del frente
+    Ejemplar VARCHAR(5) DEFAULT 'A',      -- A, B, C, D...
+    FechaEmision DATE,
+    FechaVencimiento DATE,
+    EsVigente BIT DEFAULT 1,              -- 1 = True, 0 = False
+
+    -- Estado Vital
+    Fallecido BIT DEFAULT 0,              -- 1 = True, 0 = False
+    FechaFallecimiento DATE NULL          -- Nullable (acepta nulos si está vivo)
+);
+
+--------------------------------------------------------- Poblar Renaper DB -------------------------------------------------------------------------------
+INSERT INTO Personas (
+    DNI, Apellido, Nombres, Sexo, CUIL, 
+    FechaNacimiento, Nacionalidad, 
+    Calle, Altura, Piso, Departamento, CodigoPostal, Localidad, Provincia,
+    NumeroTramite, Ejemplar, FechaEmision, FechaVencimiento, EsVigente, 
+    Fallecido, FechaFallecimiento
+)
+VALUES 
+-- 1. Caso Estándar: Hombre joven (CABA)
+(40111222, 'GOMEZ', 'LUCAS MATIAS', 'M', '20-40111222-3', 
+ '1997-03-15', 'Argentina', 
+ 'Av. Santa Fe', '2400', '3', 'B', '1425', 'CABA', 'Ciudad Autónoma de Buenos Aires',
+ '00401112223', 'A', '2015-03-15', '2030-03-15', 1, 0, NULL),
+
+-- 2. Caso Estándar: Mujer (GBA)
+(38555444, 'FERNANDEZ', 'MARIA SOL', 'F', '27-38555444-9', 
+ '1994-07-22', 'Argentina', 
+ 'San Martín', '450', NULL, NULL, '1650', 'San Martín', 'Buenos Aires',
+ '00385554449', 'B', '2021-01-10', '2036-01-10', 1, 0, NULL),
+
+-- 3. Caso: Persona Mayor (Córdoba)
+(14222333, 'ROSSI', 'ALBERTO JUAN', 'M', '20-14222333-1', 
+ '1960-11-05', 'Argentina', 
+ 'Av. Colón', '5000', NULL, NULL, '5000', 'Córdoba', 'Córdoba',
+ '00142223331', 'D', '2020-12-01', '2030-12-01', 1, 0, NULL),
+
+-- 4. Caso: Fallecido (Para probar validaciones de "Fe de Vida")
+(10999888, 'HERRERA', 'MARTA SUSANA', 'F', '27-10999888-4', 
+ '1952-02-28', 'Argentina', 
+ 'Calle Falsa', '123', NULL, NULL, '2000', 'Rosario', 'Santa Fe',
+ '00109998884', 'C', '2012-05-20', '2027-05-20', 0, 1, '2023-08-14'),
+
+-- 5. Caso: Extranjero Naturalizado (DNI 90 millones)
+(95111222, 'DA SILVA', 'JOAO', 'M', '20-95111222-5', 
+ '1985-09-09', 'Naturalizado', 
+ 'Lavalle', '800', '1', 'A', '1047', 'CABA', 'Ciudad Autónoma de Buenos Aires',
+ '00951112225', 'A', '2022-06-15', '2037-06-15', 1, 0, NULL),
+
+-- 6. Caso: DNI Vencido (Para probar lógica de "Renovación pendiente")
+(25666777, 'PERALTA', 'JORGE LUIS', 'M', '20-25666777-0', 
+ '1976-04-10', 'Argentina', 
+ 'Belgrano', '100', NULL, NULL, '5500', 'Mendoza', 'Mendoza',
+ '00256667770', 'B', '2008-04-10', '2023-04-10', 0, 0, NULL),
+
+-- 7. Caso: Interior (Tucumán)
+(32444555, 'TOLEDO', 'ANA LAURA', 'F', '27-32444555-8', 
+ '1986-12-24', 'Argentina', 
+ '25 de Mayo', '350', NULL, NULL, '4000', 'San Miguel de Tucumán', 'Tucumán',
+ '00324445558', 'C', '2019-02-20', '2034-02-20', 1, 0, NULL),
+
+-- 8. Caso: Sin piso/depto (Casa en barrio)
+(42333999, 'MARTINEZ', 'FACUNDO', 'M', '20-42333999-2', 
+ '2000-01-30', 'Argentina', 
+ 'Los Alamos', '12', NULL, NULL, '1800', 'Ezeiza', 'Buenos Aires',
+ '00423339992', 'A', '2016-01-30', '2031-01-30', 1, 0, NULL),
+
+-- 9. Caso: DNI X (No binario / Género no especificado)
+(45000111, 'LOPEZ', 'ALEX', 'X', '23-45000111-9', 
+ '2003-05-05', 'Argentina', 
+ 'Rivadavia', '9000', '5', 'F', '1407', 'CABA', 'Ciudad Autónoma de Buenos Aires',
+ '00450001119', 'A', '2021-08-10', '2036-08-10', 1, 0, NULL),
+
+-- 10. Caso: Apellido Compuesto
+(28111999, 'SANCHEZ DE BUSTAMANTE', 'LAURA', 'F', '27-28111999-6', 
+ '1980-10-10', 'Argentina', 
+ 'Libertador', '1500', '10', 'C', '1638', 'Vicente López', 'Buenos Aires',
+ '00281119996', 'B', '2020-03-01', '2035-03-01', 1, 0, NULL);

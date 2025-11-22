@@ -1,0 +1,53 @@
+﻿@model RenaperWeb.Models.PersonaViewModel
+@{
+    ViewBag.Title = "Buscador";
+}
+
+<h2>Búsqueda de Personas</h2>
+
+<div class="row">
+    <div class="col-md-6 col-md-offset-3">
+        <form action="@Url.Action("Buscador")" method="get" class="form-inline text-center well">
+            <div class="form-group">
+                <label for="dniBuscado">Ingrese DNI: </label>
+                <input type="number" class="form-control" name="dniBuscado" placeholder="Ej: 35123456" required />
+            </div>
+            <button type="submit" class="btn btn-info">Buscar</button>
+        </form>
+    </div>
+</div>
+
+@if (ViewBag.Error != null)
+{
+    <div class="alert alert-danger text-center">
+        @ViewBag.Error
+    </div>
+}
+
+@if (Model != null)
+{
+    <div class="panel panel-success">
+        <div class="panel-heading">
+            <h3 class="panel-title">Identidad Validada</h3>
+        </div>
+        <div class="panel-body">
+            <dl class="dl-horizontal">
+                <dt>DNI:</dt>
+                <dd>@Model.DNI</dd>
+
+                <dt>Apellido:</dt>
+                <dd>@Model.Apellido</dd>
+
+                <dt>Nombres:</dt>
+                <dd>@Model.Nombres</dd>
+
+                <dt>Provincia:</dt>
+                <dd>@Model.Provincia</dd>
+            </dl>
+        </div>
+    </div>
+
+    <div class="text-center">
+        <a href="@Url.Action("Index")" class="btn btn-default">Volver al Inicio</a>
+    </div>
+}

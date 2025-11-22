@@ -1,0 +1,15 @@
+[
+  {
+    "Name": "Nuevo perfil",
+    "Projects": [
+      {
+        "Path": "RenaperWeb\\RenaperWeb.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "RenaperAPI\\RenaperAPI.csproj",
+        "Action": "Start"
+      }
+    ]
+  }
+]

@@ -1,0 +1,29 @@
+﻿@{
+    ViewBag.Title = "Inicio Renaper";
+}
+
+<div class="jumbotron text-center">
+    <h1>Panel de Acceso RENAPER</h1>
+    <p class="lead">Sistema de validación de identidad simulado.</p>
+</div>
+
+<div class="row text-center">
+    <div class="col-md-6">
+        <div class="well">
+            <h3>Base de Datos Completa</h3>
+            <p>Ver el listado de todos los ciudadanos registrados.</p>
+            <a href="@Url.Action("Listado", "Renaper")" class="btn btn-primary btn-lg">
+                <i class="glyphicon glyphicon-list"></i> Ver Listado
+            </a>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="well">
+            <h3>Consulta Individual</h3>
+            <p>Validar identidad buscando por número de DNI.</p>
+            <a href="@Url.Action("Buscador", "Renaper")" class="btn btn-success btn-lg">
+                <i class="glyphicon glyphicon-search"></i> Buscar por DNI
+            </a>
+        </div>
+    </div>
+</div>
