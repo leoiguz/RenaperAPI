@@ -1,29 +1,59 @@
-﻿@{
-    ViewBag.Title = "Inicio Renaper";
+﻿@model RenaperWeb.Models.PersonaViewModel
+@{
+    ViewBag.Title = "Inicio";
 }
 
-<div class="jumbotron text-center">
-    <h1>Panel de Acceso RENAPER</h1>
-    <p class="lead">Sistema de validación de identidad simulado.</p>
-</div>
+<section id="vista-busqueda" class="bg-white rounded-lg shadow-sm border border-slate-200 p-8 fade-in mb-8">
+    <h2 class="text-2xl font-bold text-slate-700 mb-2">Iniciar Trámite de Consulta</h2>
+    <p class="text-slate-500 mb-6">Ingrese el DNI de la persona física para solicitar el informe de identidad.</p>
 
-<div class="row text-center">
-    <div class="col-md-6">
-        <div class="well">
-            <h3>Base de Datos Completa</h3>
-            <p>Ver el listado de todos los ciudadanos registrados.</p>
-            <a href="@Url.Action("Listado", "Renaper")" class="btn btn-primary btn-lg">
-                <i class="glyphicon glyphicon-list"></i> Ver Listado
-            </a>
+    <form action="@Url.Action("Buscador")" method="get">
+        <div class="flex flex-col md:flex-row gap-4 items-end">
+            <div class="w-full">
+                <label for="dniBuscado" class="block text-sm font-bold text-slate-700 mb-2">Número de Documento (Sin puntos)</label>
+                <input type="number"
+                       name="dniBuscado"
+                       class="w-full p-3 border border-slate-300 rounded focus:ring-2 focus:ring-blue-500 focus:outline-none text-lg"
+                       placeholder="Ej: 35123456"
+                       required />
+            </div>
+            <button type="submit" class="w-full md:w-auto bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded transition shadow-lg flex justify-center items-center gap-2 whitespace-nowrap">
+                Consultar
+                <i class="fa-solid fa-chevron-right"></i>
+            </button>
+        </div>
+    </form>
+
+    @if (ViewBag.Error != null)
+    {
+        <div class="mt-4 p-4 bg-red-50 border-l-4 border-red-500 text-red-700">
+            <p class="font-bold"><i class="fa-solid fa-circle-exclamation mr-2"></i>Error</p>
+            <p>@ViewBag.Error</p>
+        </div>
+    }
+</section>
+
+@if (Model != null)
+{
+    <div class="panel panel-success">
+        <div class="panel-heading">
+            <h3 class="panel-title">Identidad Validada</h3>
+        </div>
+        <div class="panel-body">
+            <dl class="dl-horizontal">
+                <dt>DNI:</dt>
+                <dd>@Model.DNI</dd>
+                <dt>Apellido:</dt>
+                <dd>@Model.Apellido</dd>
+                <dt>Nombres:</dt>
+                <dd>@Model.Nombres</dd>
+                <dt>Provincia:</dt>
+                <dd>@Model.Provincia</dd>
+            </dl>
         </div>
     </div>
-    <div class="col-md-6">
-        <div class="well">
-            <h3>Consulta Individual</h3>
-            <p>Validar identidad buscando por número de DNI.</p>
-            <a href="@Url.Action("Buscador", "Renaper")" class="btn btn-success btn-lg">
-                <i class="glyphicon glyphicon-search"></i> Buscar por DNI
-            </a>
-        </div>
+
+    <div class="text-center mt-4">
+        <a href="@Url.Action("Index")" class="text-blue-600 hover:underline">Volver al Inicio</a>
     </div>
-</div>
+}
