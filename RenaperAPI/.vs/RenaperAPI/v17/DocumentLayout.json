@@ -3,16 +3,16 @@
   "WorkspaceRootPath": "C:\\Users\\Micae\\source\\repos\\PAD\\RenaperAPI\\RenaperAPI\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{42CE552D-0287-41E8-A1D4-CC620F03E96C}|RenaperWeb\\RenaperWeb.csproj|C:\\Users\\Micae\\source\\repos\\PAD\\RenaperAPI\\RenaperAPI\\renaperweb\\views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{42CE552D-0287-41E8-A1D4-CC620F03E96C}|RenaperWeb\\RenaperWeb.csproj|solutionrelative:renaperweb\\views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{42CE552D-0287-41E8-A1D4-CC620F03E96C}|RenaperWeb\\RenaperWeb.csproj|C:\\Users\\Micae\\source\\repos\\PAD\\RenaperAPI\\RenaperAPI\\renaperweb\\views\\renaper\\buscador.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{42CE552D-0287-41E8-A1D4-CC620F03E96C}|RenaperWeb\\RenaperWeb.csproj|solutionrelative:renaperweb\\views\\renaper\\buscador.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{42CE552D-0287-41E8-A1D4-CC620F03E96C}|RenaperWeb\\RenaperWeb.csproj|c:\\users\\micae\\source\\repos\\pad\\renaperapi\\renaperapi\\renaperweb\\views\\renaper\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{42CE552D-0287-41E8-A1D4-CC620F03E96C}|RenaperWeb\\RenaperWeb.csproj|solutionrelative:renaperweb\\views\\renaper\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{42CE552D-0287-41E8-A1D4-CC620F03E96C}|RenaperWeb\\RenaperWeb.csproj|C:\\Users\\Micae\\source\\repos\\PAD\\RenaperAPI\\RenaperAPI\\renaperweb\\views\\renaper\\buscador.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{42CE552D-0287-41E8-A1D4-CC620F03E96C}|RenaperWeb\\RenaperWeb.csproj|solutionrelative:renaperweb\\views\\renaper\\buscador.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{42CE552D-0287-41E8-A1D4-CC620F03E96C}|RenaperWeb\\RenaperWeb.csproj|C:\\Users\\Micae\\source\\repos\\PAD\\RenaperAPI\\RenaperAPI\\renaperweb\\views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{42CE552D-0287-41E8-A1D4-CC620F03E96C}|RenaperWeb\\RenaperWeb.csproj|solutionrelative:renaperweb\\views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{42CE552D-0287-41E8-A1D4-CC620F03E96C}|RenaperWeb\\RenaperWeb.csproj|C:\\Users\\Micae\\source\\repos\\PAD\\RenaperAPI\\RenaperAPI\\renaperweb\\content\\site.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
@@ -33,7 +33,7 @@
       "DocumentGroups": [
         {
           "DockedHeight": 42,
-          "SelectedChildIndex": 4,
+          "SelectedChildIndex": 3,
           "Children": [
             {
               "$type": "Document",
@@ -43,7 +43,7 @@
               "RelativeDocumentMoniker": "RenaperWeb\\Views\\Renaper\\Index.cshtml",
               "ToolTip": "C:\\Users\\Micae\\source\\repos\\PAD\\RenaperAPI\\RenaperAPI\\RenaperWeb\\Views\\Renaper\\Index.cshtml",
               "RelativeToolTip": "RenaperWeb\\Views\\Renaper\\Index.cshtml",
-              "ViewState": "AgIAACsAAAAAAAAAAAAAAB8AAAAOAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAAiAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2025-11-23T15:23:23.672Z",
               "EditorCaption": ""
@@ -71,26 +71,26 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 0,
               "Title": "Buscador.cshtml",
               "DocumentMoniker": "C:\\Users\\Micae\\source\\repos\\PAD\\RenaperAPI\\RenaperAPI\\RenaperWeb\\Views\\Renaper\\Buscador.cshtml",
               "RelativeDocumentMoniker": "RenaperWeb\\Views\\Renaper\\Buscador.cshtml",
               "ToolTip": "C:\\Users\\Micae\\source\\repos\\PAD\\RenaperAPI\\RenaperAPI\\RenaperWeb\\Views\\Renaper\\Buscador.cshtml",
               "RelativeToolTip": "RenaperWeb\\Views\\Renaper\\Buscador.cshtml",
-              "ViewState": "AgIAAB8AAAAAAAAAAAAAADoAAAABAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAADcAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2025-11-23T14:40:59.766Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 2,
               "Title": "_Layout.cshtml",
               "DocumentMoniker": "C:\\Users\\Micae\\source\\repos\\PAD\\RenaperAPI\\RenaperAPI\\RenaperWeb\\Views\\Shared\\_Layout.cshtml",
               "RelativeDocumentMoniker": "RenaperWeb\\Views\\Shared\\_Layout.cshtml",
-              "ToolTip": "C:\\Users\\Micae\\source\\repos\\PAD\\RenaperAPI\\RenaperAPI\\RenaperWeb\\Views\\Shared\\_Layout.cshtml*",
-              "RelativeToolTip": "RenaperWeb\\Views\\Shared\\_Layout.cshtml*",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAACoAAAAuAAAAAAAAAA==",
+              "ToolTip": "C:\\Users\\Micae\\source\\repos\\PAD\\RenaperAPI\\RenaperAPI\\RenaperWeb\\Views\\Shared\\_Layout.cshtml",
+              "RelativeToolTip": "RenaperWeb\\Views\\Shared\\_Layout.cshtml",
+              "ViewState": "AgIAABUAAAAAAAAAAAAAACoAAAAwAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2025-11-23T14:41:01.094Z",
               "EditorCaption": ""

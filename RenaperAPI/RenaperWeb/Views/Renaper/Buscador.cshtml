@@ -1,59 +1,56 @@
-﻿@model RenaperWeb.Models.PersonaViewModel
-@{
-    ViewBag.Title = "Buscador";
-}
-
-<section id="vista-busqueda" class="bg-white rounded-lg shadow-sm border border-slate-200 p-8 fade-in mb-8">
-    <h2 class="text-2xl font-bold text-slate-700 mb-2">Iniciar Trámite de Consulta</h2>
-    <p class="text-slate-500 mb-6">Ingrese el DNI de la persona física para solicitar el informe de identidad.</p>
-
-    <form action="@Url.Action("Buscador")" method="get">
-        <div class="flex flex-col md:flex-row gap-4 items-end">
-            <div class="w-full">
-                <label for="dniBuscado" class="block text-sm font-bold text-slate-700 mb-2">Número de Documento (Sin puntos)</label>
-                <input type="number"
-                       name="dniBuscado"
-                       class="w-full p-3 border border-slate-300 rounded focus:ring-2 focus:ring-blue-500 focus:outline-none text-lg"
-                       placeholder="Ej: 35123456"
-                       required />
-            </div>
-            <button type="submit" class="w-full md:w-auto bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded transition shadow-lg flex justify-center items-center gap-2 whitespace-nowrap">
-                Consultar
-                <i class="fa-solid fa-chevron-right"></i>
-            </button>
-        </div>
-    </form>
-
-    @if (ViewBag.Error != null)
-    {
-        <div class="mt-4 p-4 bg-red-50 border-l-4 border-red-500 text-red-700">
-            <p class="font-bold"><i class="fa-solid fa-circle-exclamation mr-2"></i>Error</p>
-            <p>@ViewBag.Error</p>
-        </div>
-    }
-</section>
-
-@if (Model != null)
+﻿@if (Model != null)
 {
-    <div class="panel panel-success">
-        <div class="panel-heading">
-            <h3 class="panel-title">Identidad Validada</h3>
-        </div>
-        <div class="panel-body">
-            <dl class="dl-horizontal">
-                <dt>DNI:</dt>
-                <dd>@Model.DNI</dd>
-                <dt>Apellido:</dt>
-                <dd>@Model.Apellido</dd>
-                <dt>Nombres:</dt>
-                <dd>@Model.Nombres</dd>
-                <dt>Provincia:</dt>
-                <dd>@Model.Provincia</dd>
-            </dl>
-        </div>
-    </div>
+    <section id="vista-resultado" class="bg-white rounded-lg shadow-lg overflow-hidden fade-in border-t-4 border-blue-600 mt-8">
+        <div class="p-6 md:p-10">
+            <div class="flex justify-between items-start mb-6">
+                <div>
+                    <h2 class="text-2xl font-bold text-slate-800">Identidad Validada</h2>
+                    <p class="text-green-600 font-bold text-sm flex items-center gap-1">
+                        <i class="fa-solid fa-check-circle"></i> Datos encontrados en RENAPER
+                    </p>
+                </div>
+                <img src="https://upload.wikimedia.org/wikipedia/commons/f/ff/Coat_of_arms_of_Argentina.svg"
+                     alt="Escudo Argentina"
+                     class="h-12 opacity-80">
+            </div>
 
-    <div class="text-center mt-4">
-        <a href="@Url.Action("Index")" class="text-blue-600 hover:underline">Volver al Inicio</a>
-    </div>
+            <div class="bg-slate-50 rounded-xl p-6 border border-slate-200 flex flex-col md:flex-row gap-8">
+
+                <div class="flex-shrink-0 flex flex-col items-center">
+                    <div class="w-32 h-32 bg-gray-300 rounded-full overflow-hidden border-4 border-white shadow-md">
+                        <img src="https://randomuser.me/api/portraits/lego/1.jpg" alt="Foto Persona" class="w-full h-full object-cover opacity-80">
+                    </div>
+                    <span class="mt-2 bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded">ID VERIFICADO</span>
+                </div>
+
+                <div class="flex-grow grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-8">
+                    <div>
+                        <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Documento Nacional de Identidad</label>
+                        <p class="text-xl font-mono font-bold text-slate-900">@Model.DNI</p>
+                    </div>
+
+                    <div>
+                        <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">CUIL / CUIT (Ref)</label>
+                        <p class="text-lg text-slate-800">20-@Model.DNI-X</p>
+                    </div>
+
+                    <div class="md:col-span-2">
+                        <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Apellido y Nombres</label>
+                        <p class="text-lg font-bold text-slate-800 uppercase">@Model.Apellido, @Model.Nombres</p>
+                    </div>
+
+                    <div class="md:col-span-2">
+                        <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Provincia / Distrito</label>
+                        <p class="text-lg text-slate-800">@Model.Provincia</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-6 text-center">
+                <a href="@Url.Action("Index")" class="text-blue-600 hover:text-blue-800 font-semibold text-sm hover:underline">
+                    Realizar nueva consulta
+                </a>
+            </div>
+        </div>
+    </section>
 }
