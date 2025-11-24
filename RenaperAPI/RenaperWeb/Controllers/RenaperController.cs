@@ -32,7 +32,7 @@ public class RenaperController : Controller
         return View(personas);
     }
 
-    // EL BUSCADOR (Solo procesa y redirige)
+    // BUSCADOR (Modificado para flujo directo)
     public async Task<ActionResult> Buscador(int? dniBuscado)
     {
         if (dniBuscado == null) return View();
@@ -40,11 +40,11 @@ public class RenaperController : Controller
         using (var client = new HttpClient())
         {
             client.DefaultRequestHeaders.Add("X-API-KEY", MI_API_KEY);
-            string urlEspecifica = $"{URL_BASE}/Dni/{dniBuscado}";
-            var response = await client.GetAsync(urlEspecifica);
+            var response = await client.GetAsync($"{URL_BASE}/Dni/{dniBuscado}");
 
             if (response.IsSuccessStatusCode)
             {
+                // CAMBIO: Redirige directo al Pago, sin selección intermedia
                 return RedirectToAction("Pago", new { dni = dniBuscado });
             }
             else
@@ -55,25 +55,23 @@ public class RenaperController : Controller
         }
     }
 
-    // LA VISTA DEL CUPÓN DE PAGO
+    // VISTA DEL CUPÓN (La llamaremos simplemente "Pago")
     public async Task<ActionResult> Pago(int dni)
     {
         var persona = await ObtenerPersonaPorDni(dni);
         if (persona == null) return RedirectToAction("Buscador");
-
         return View(persona);
     }
 
-    // LA FICHA FINAL (Solo accesible tras "pagar")
+    // FICHA FINAL
     public async Task<ActionResult> Ficha(int dni)
     {
         var persona = await ObtenerPersonaPorDni(dni);
         if (persona == null) return RedirectToAction("Buscador");
-
         return View(persona);
     }
 
-    // Helper privado para no repetir código de llamada a API
+    // Helper
     private async Task<PersonaViewModel> ObtenerPersonaPorDni(int dni)
     {
         using (var client = new HttpClient())

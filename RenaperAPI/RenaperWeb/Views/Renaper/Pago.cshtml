@@ -1,0 +1,94 @@
+﻿@model RenaperWeb.Models.PersonaViewModel
+@{
+    ViewBag.Title = "Cupón de Pago";
+}
+
+<style>
+    /* Código de barras CSS puro */
+    .barcode {
+        height: 50px;
+        width: 100%;
+        background: repeating-linear-gradient(90deg, #000 0px, #000 2px, transparent 2px, transparent 4px, #000 4px, #000 5px, transparent 5px, transparent 7px, #000 7px, #000 10px, transparent 10px, transparent 12px);
+        opacity: 0.8;
+    }
+    /* Bordes dentados tipo ticket */
+    .ticket-border {
+        background-image: radial-gradient(circle at top left, transparent 10px, #fff 11px), radial-gradient(circle at top right, transparent 10px, #fff 11px), radial-gradient(circle at bottom left, transparent 10px, #fff 11px), radial-gradient(circle at bottom right, transparent 10px, #fff 11px);
+        background-position: top left, top right, bottom left, bottom right;
+        background-repeat: no-repeat;
+        background-size: 51% 51%;
+    }
+</style>
+
+<div class="max-w-lg mx-auto mt-8 fade-in">
+
+    <div id="seccion-cupon">
+        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6 rounded-r shadow-sm">
+            <div class="flex">
+                <div class="flex-shrink-0"><i class="fa-solid fa-clock text-yellow-500"></i></div>
+                <div class="ml-3">
+                    <p class="text-sm text-yellow-700">
+                        Solicitud <span class="font-bold">PENDIENTE DE PAGO</span>.
+                        Abone el arancel para ver la ficha completa.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white shadow-2xl ticket-border overflow-hidden relative mb-8">
+            <div class="bg-yellow-400 p-6 text-center text-black">
+                <h3 class="font-bold text-xl uppercase tracking-widest border-2 border-black inline-block px-4 py-1 mb-2">Pago Fácil</h3>
+                <p class="text-xs font-bold">CUPÓN DE PAGO ÚNICO</p>
+            </div>
+            <div class="p-8">
+                <div class="flex justify-between items-end border-b border-dashed border-gray-300 pb-4 mb-4">
+                    <div>
+                        <p class="text-xs text-gray-500 uppercase">Concepto</p>
+                        <p class="font-bold text-lg">Consulta Renaper</p>
+                        <p class="text-sm text-gray-600">DNI: @Model.DNI</p>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-xs text-gray-500 uppercase">Total</p>
+                        <p class="text-3xl font-bold text-slate-900">$1.000</p>
+                    </div>
+                </div>
+
+                <div class="text-center mb-6">
+                    <div class="barcode mb-1"></div>
+                    <p class="font-mono text-sm tracking-[0.2em] font-bold text-slate-600">0001 9822 @Model.DNI 9912</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center space-y-4">
+            <button onclick="simularPago()" class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-8 rounded-full shadow-xl transition transform hover:scale-105 w-full">
+                <i class="fa-solid fa-cash-register mr-2"></i> Simular Pago en Cajero
+            </button>
+
+            <a href="@Url.Action("Buscador")" class="block text-slate-400 hover:text-slate-600 text-sm underline mt-4">
+                Cancelar operación
+            </a>
+        </div>
+    </div>
+
+    <div id="seccion-procesando" class="hidden text-center py-20 fade-in">
+        <div class="inline-block animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-600 mb-4"></div>
+        <h3 class="text-xl font-bold text-slate-700">Procesando Pago...</h3>
+        <p class="text-slate-500">Confirmando transacción con la entidad...</p>
+    </div>
+
+</div>
+
+<script>
+    function simularPago() {
+        // 1. Ocultar ticket
+        document.getElementById('seccion-cupon').classList.add('hidden');
+        // 2. spinner
+        document.getElementById('seccion-procesando').classList.remove('hidden');
+
+        // 3. Esperar 3 segundos y redirigir a la Ficha
+        setTimeout(function() {
+            window.location.href = '@Url.Action("Ficha", new { dni = Model.DNI })';
+        }, 3000);
+    }
+</script>
