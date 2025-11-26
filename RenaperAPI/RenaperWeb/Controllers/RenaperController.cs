@@ -63,6 +63,14 @@ public class RenaperController : Controller
         return View(persona);
     }
 
+    // VISTA DE PAGO CON MERCADO PAGO
+    public async Task<ActionResult> PagoMercadoPago(int dni)
+    {
+        var persona = await ObtenerPersonaPorDni(dni);
+        if (persona == null) return RedirectToAction("Buscador");
+        return View(persona);
+    }
+
     // VISTA DE PAGO (Actualmente es Pago Fácil)
     public async Task<ActionResult> Pago(int dni)
     {

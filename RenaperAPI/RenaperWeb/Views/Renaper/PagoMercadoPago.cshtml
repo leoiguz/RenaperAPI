@@ -1,0 +1,82 @@
+﻿@model RenaperWeb.Models.PersonaViewModel
+@{
+    ViewBag.Title = "Pagar con QR";
+}
+
+<style>
+    .mp-bg {
+        background-color: #009ee3;
+    }
+
+    .qr-frame {
+        border: 2px solid #e2e8f0;
+        position: relative;
+    }
+
+        .qr-frame::after {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            width: 20px;
+            height: 20px;
+            border-top: 4px solid #009ee3;
+            border-left: 4px solid #009ee3;
+        }
+
+        .qr-frame::before {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            right: -2px;
+            width: 20px;
+            height: 20px;
+            border-bottom: 4px solid #009ee3;
+            border-right: 4px solid #009ee3;
+        }
+</style>
+
+<div class="max-w-md mx-auto mt-6 fade-in">
+
+    <div id="ui-pago" class="bg-white rounded-xl shadow-lg overflow-hidden border border-slate-200">
+        <div class="mp-bg p-4 flex justify-between items-center text-white">
+            <span class="font-bold text-sm">Mercado Pago</span>
+            <span class="bg-white/20 text-xs px-2 py-1 rounded">Total: $1.000</span>
+        </div>
+
+        <div class="p-8 text-center">
+            <h3 class="text-xl font-bold text-slate-700 mb-2">Escaneá el código QR</h3>
+            <p class="text-slate-400 text-sm mb-6">Pagá de forma rápida y segura con tu celular.</p>
+
+            <div class="inline-block p-4 bg-white rounded-lg qr-frame mb-6 shadow-sm">
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=Renaper-@Model.DNI-PagoMP" alt="QR Code" class="w-48 h-48 opacity-90">
+            </div>
+
+            <p class="text-xs text-slate-400 mb-6">Vencimiento: 15 minutos</p>
+
+            <button onclick="simularPagoMP()" class="w-full mp-bg hover:bg-sky-500 text-white font-bold py-3 px-6 rounded-md transition shadow-md flex items-center justify-center gap-2">
+                <i class="fa-solid fa-mobile-screen"></i> Simular Escaneo
+            </button>
+
+            <a href="@Url.Action("SeleccionPago", new { dni = Model.DNI })" class="block mt-4 text-xs text-slate-400 hover:text-sky-500 underline">Cambiar medio de pago</a>
+        </div>
+    </div>
+
+    <div id="ui-procesando" class="hidden bg-white rounded-xl shadow-lg p-10 text-center border-t-4 border-[#009ee3]">
+        <div class="inline-block animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-[#009ee3] mb-4"></div>
+        <h3 class="text-lg font-bold text-slate-700">Procesando pago...</h3>
+        <p class="text-slate-500 text-sm">No cierres esta ventana.</p>
+    </div>
+</div>
+
+<script>
+    function simularPagoMP() {
+        document.getElementById('ui-pago').classList.add('hidden');
+        document.getElementById('ui-procesando').classList.remove('hidden');
+
+        // Simula espera y redirige a la Ficha (Resultado)
+        setTimeout(function() {
+            window.location.href = '@Url.Action("Ficha", new { dni = Model.DNI })';
+        }, 3000);
+    }
+</script>

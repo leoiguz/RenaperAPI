@@ -187,6 +187,7 @@
     <Content Include="Views\Renaper\Pago.cshtml" />
     <Content Include="Views\Renaper\Ficha.cshtml" />
     <Content Include="Views\Renaper\SeleccionPago.cshtml" />
+    <Content Include="Views\Renaper\PagoMercadoPago.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
