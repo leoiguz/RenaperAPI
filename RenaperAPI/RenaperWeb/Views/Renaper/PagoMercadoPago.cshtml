@@ -1,82 +1,134 @@
 ﻿@model RenaperWeb.Models.PersonaViewModel
 @{
-    ViewBag.Title = "Pagar con QR";
+    ViewBag.Title = "Mercado Pago - Checkout";
 }
 
 <style>
+    /* Colores oficiales de Mercado Pago */
     .mp-bg {
         background-color: #009ee3;
     }
 
-    .qr-frame {
-        border: 2px solid #e2e8f0;
-        position: relative;
+    .mp-text {
+        color: #009ee3;
     }
 
-        .qr-frame::after {
-            content: '';
-            position: absolute;
-            top: -2px;
-            left: -2px;
-            width: 20px;
-            height: 20px;
-            border-top: 4px solid #009ee3;
-            border-left: 4px solid #009ee3;
-        }
+    .mp-btn:hover {
+        background-color: #0081b9;
+    }
 
-        .qr-frame::before {
-            content: '';
-            position: absolute;
-            bottom: -2px;
-            right: -2px;
-            width: 20px;
-            height: 20px;
-            border-bottom: 4px solid #009ee3;
-            border-right: 4px solid #009ee3;
+    /* Input customizado */
+    .mp-input {
+        transition: all 0.2s;
+        border: 1px solid #e2e8f0;
+    }
+
+        .mp-input:focus {
+            border-color: #009ee3;
+            box-shadow: 0 0 0 2px rgba(0, 158, 227, 0.2);
+            outline: none;
         }
 </style>
 
-<div class="max-w-md mx-auto mt-6 fade-in">
+<div class="max-w-lg mx-auto mt-6 fade-in">
 
-    <div id="ui-pago" class="bg-white rounded-xl shadow-lg overflow-hidden border border-slate-200">
-        <div class="mp-bg p-4 flex justify-between items-center text-white">
-            <span class="font-bold text-sm">Mercado Pago</span>
-            <span class="bg-white/20 text-xs px-2 py-1 rounded">Total: $1.000</span>
+    <div class="flex justify-between items-center mb-6">
+        <h2 class="text-xl font-bold text-slate-700">Pagar con Tarjeta</h2>
+        <div class="flex items-center gap-2">
+            <span class="text-xs font-bold text-slate-400">Powered by</span>
+            <span class="font-bold mp-text text-lg">mercadopago</span>
+        </div>
+    </div>
+
+    <div id="ui-formulario" class="bg-white rounded-xl shadow-lg overflow-hidden border border-slate-200">
+
+        <div class="mp-bg p-6 text-white flex justify-between items-end">
+            <div>
+                <p class="text-xs opacity-80 uppercase tracking-wider">Total a pagar</p>
+                <p class="text-3xl font-bold">$1.500<span class="text-lg">.00</span></p>
+            </div>
+            <div class="text-right">
+                <p class="text-xs opacity-80">Referencia</p>
+                <p class="font-mono font-bold">DNI @Model.DNI</p>
+            </div>
         </div>
 
-        <div class="p-8 text-center">
-            <h3 class="text-xl font-bold text-slate-700 mb-2">Escaneá el código QR</h3>
-            <p class="text-slate-400 text-sm mb-6">Pagá de forma rápida y segura con tu celular.</p>
+        <div class="p-8">
+            <form id="form-pago" onsubmit="event.preventDefault(); simularProcesamiento();">
 
-            <div class="inline-block p-4 bg-white rounded-lg qr-frame mb-6 shadow-sm">
-                <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=Renaper-@Model.DNI-PagoMP" alt="QR Code" class="w-48 h-48 opacity-90">
+                <div class="mb-5">
+                    <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Número de tarjeta</label>
+                    <div class="relative">
+                        <input type="text" maxlength="19" placeholder="0000 0000 0000 0000" class="mp-input w-full p-3 rounded-lg font-mono text-slate-700 text-lg" required>
+                        <i class="fa-regular fa-credit-card absolute right-4 top-4 text-slate-400"></i>
+                    </div>
+                </div>
+
+                <div class="mb-5">
+                    <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Nombre y Apellido</label>
+                    <input type="text" placeholder="Como figura en la tarjeta" class="mp-input w-full p-3 rounded-lg text-slate-700 uppercase" required>
+                </div>
+
+                <div class="flex gap-4 mb-5">
+                    <div class="w-1/2">
+                        <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Vencimiento</label>
+                        <input type="text" placeholder="MM/AA" maxlength="5" class="mp-input w-full p-3 rounded-lg text-center font-mono" required>
+                    </div>
+                    <div class="w-1/2">
+                        <label class="block text-xs font-bold text-slate-500 uppercase mb-1">CVV</label>
+                        <div class="relative">
+                            <input type="password" maxlength="4" placeholder="123" class="mp-input w-full p-3 rounded-lg text-center font-mono" required>
+                            <i class="fa-solid fa-lock absolute right-4 top-4 text-slate-300 text-xs"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-8">
+                    <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Email del titular</label>
+                    <input type="email" placeholder="ejemplo@email.com" class="mp-input w-full p-3 rounded-lg text-slate-700" required>
+                </div>
+
+                <button type="submit" class="w-full mp-bg mp-btn text-white font-bold py-4 rounded-lg shadow-md transition transform active:scale-95 flex justify-center items-center gap-2">
+                    Pagar $1.500,00
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </form>
+
+            <div class="mt-6 text-center">
+                <a href="@Url.Action("SeleccionPago", new { dni = Model.DNI })" class="text-xs text-slate-400 hover:text-slate-600 flex items-center justify-center gap-1">
+                    <i class="fa-solid fa-arrow-left"></i> Cambiar medio de pago
+                </a>
             </div>
 
-            <p class="text-xs text-slate-400 mb-6">Vencimiento: 15 minutos</p>
-
-            <button onclick="simularPagoMP()" class="w-full mp-bg hover:bg-sky-500 text-white font-bold py-3 px-6 rounded-md transition shadow-md flex items-center justify-center gap-2">
-                <i class="fa-solid fa-mobile-screen"></i> Simular Escaneo
-            </button>
-
-            <a href="@Url.Action("SeleccionPago", new { dni = Model.DNI })" class="block mt-4 text-xs text-slate-400 hover:text-sky-500 underline">Cambiar medio de pago</a>
+            <div class="mt-4 flex justify-center gap-3 opacity-40 grayscale">
+                <i class="fa-brands fa-cc-visa text-2xl"></i>
+                <i class="fa-brands fa-cc-mastercard text-2xl"></i>
+                <i class="fa-brands fa-cc-amex text-2xl"></i>
+            </div>
         </div>
     </div>
 
-    <div id="ui-procesando" class="hidden bg-white rounded-xl shadow-lg p-10 text-center border-t-4 border-[#009ee3]">
-        <div class="inline-block animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-[#009ee3] mb-4"></div>
-        <h3 class="text-lg font-bold text-slate-700">Procesando pago...</h3>
-        <p class="text-slate-500 text-sm">No cierres esta ventana.</p>
+    <div id="ui-procesando" class="hidden bg-white rounded-xl shadow-lg p-12 text-center border-t-4 border-[#009ee3]">
+        <div class="inline-block animate-spin rounded-full h-14 w-14 border-t-4 border-b-4 border-[#009ee3] mb-6"></div>
+        <h3 class="text-xl font-bold text-slate-800 mb-2">Procesando pago...</h3>
+        <p class="text-slate-500">Estamos validando tu tarjeta con el banco.</p>
+        <p class="text-xs text-slate-400 mt-4">No cierres esta ventana.</p>
     </div>
+
 </div>
 
 <script>
-    function simularPagoMP() {
-        document.getElementById('ui-pago').classList.add('hidden');
+    function simularProcesamiento() {
+        document.getElementById('ui-formulario').classList.add('hidden');
+
+        // loader
         document.getElementById('ui-procesando').classList.remove('hidden');
 
-        // Simula espera y redirige a la Ficha (Resultado)
+        // 3. Simular espera de API 
         setTimeout(function() {
+            // Aquí en el futuro llamaremos a la API real 
             window.location.href = '@Url.Action("Ficha", new { dni = Model.DNI })';
         }, 3000);
     }
+
 </script>
