@@ -32,7 +32,7 @@ public class RenaperController : Controller
         return View(personas);
     }
 
-    // BUSCADOR: Ahora redirige a 'SeleccionPago'
+    // BUSCADOR: redirige a 'SeleccionPago'
     public async Task<ActionResult> Buscador(int? dniBuscado)
     {
         if (dniBuscado == null) return View();
@@ -44,7 +44,6 @@ public class RenaperController : Controller
 
             if (response.IsSuccessStatusCode)
             {
-                // CAMBIO IMPORTANTE: Redirige a la pantalla de selección
                 return RedirectToAction("SeleccionPago", new { dni = dniBuscado });
             }
             else
@@ -55,7 +54,7 @@ public class RenaperController : Controller
         }
     }
 
-    // NUEVA ACCIÓN: Pantalla de Selección
+    //Pantalla de Selección
     public async Task<ActionResult> SeleccionPago(int dni)
     {
         var persona = await ObtenerPersonaPorDni(dni);
@@ -72,10 +71,11 @@ public class RenaperController : Controller
     }
 
     // VISTA DE PAGO (Actualmente es Pago Fácil)
-    public async Task<ActionResult> Pago(int dni)
+    public async Task<ActionResult> PagoPagoFacil(int dni)
     {
         var persona = await ObtenerPersonaPorDni(dni);
         if (persona == null) return RedirectToAction("Buscador");
+
         return View(persona);
     }
 

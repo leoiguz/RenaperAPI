@@ -150,6 +150,7 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\bootstrap.rtl.css" />
     <Content Include="Content\bootstrap.rtl.min.css" />
+    <Content Include="Content\Renaper.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
@@ -184,7 +185,7 @@
     <Content Include="Views\Renaper\Index.cshtml" />
     <Content Include="Views\Renaper\Listado.cshtml" />
     <Content Include="Views\Renaper\Buscador.cshtml" />
-    <Content Include="Views\Renaper\Pago.cshtml" />
+    <Content Include="Views\Renaper\PagoPagoFacil.cshtml" />
     <Content Include="Views\Renaper\Ficha.cshtml" />
     <Content Include="Views\Renaper\SeleccionPago.cshtml" />
     <Content Include="Views\Renaper\PagoMercadoPago.cshtml" />

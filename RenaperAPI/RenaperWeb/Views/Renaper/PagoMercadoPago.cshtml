@@ -3,33 +3,6 @@
     ViewBag.Title = "Mercado Pago - Checkout";
 }
 
-<style>
-    /* Colores oficiales de Mercado Pago */
-    .mp-bg {
-        background-color: #009ee3;
-    }
-
-    .mp-text {
-        color: #009ee3;
-    }
-
-    .mp-btn:hover {
-        background-color: #0081b9;
-    }
-
-    /* Input customizado */
-    .mp-input {
-        transition: all 0.2s;
-        border: 1px solid #e2e8f0;
-    }
-
-        .mp-input:focus {
-            border-color: #009ee3;
-            box-shadow: 0 0 0 2px rgba(0, 158, 227, 0.2);
-            outline: none;
-        }
-</style>
-
 <div class="max-w-lg mx-auto mt-6 fade-in">
 
     <div class="flex justify-between items-center mb-6">
@@ -112,23 +85,15 @@
         <div class="inline-block animate-spin rounded-full h-14 w-14 border-t-4 border-b-4 border-[#009ee3] mb-6"></div>
         <h3 class="text-xl font-bold text-slate-800 mb-2">Procesando pago...</h3>
         <p class="text-slate-500">Estamos validando tu tarjeta con el banco.</p>
-        <p class="text-xs text-slate-400 mt-4">No cierres esta ventana.</p>
     </div>
-
 </div>
 
 <script>
     function simularProcesamiento() {
         document.getElementById('ui-formulario').classList.add('hidden');
-
-        // loader
         document.getElementById('ui-procesando').classList.remove('hidden');
-
-        // 3. Simular espera de API 
         setTimeout(function() {
-            // Aquí en el futuro llamaremos a la API real 
             window.location.href = '@Url.Action("Ficha", new { dni = Model.DNI })';
         }, 3000);
     }
-
 </script>
