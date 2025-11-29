@@ -173,6 +173,7 @@
     <Content Include="Views\Renaper\Ficha.cshtml" />
     <Content Include="Views\Renaper\SeleccionPago.cshtml" />
     <Content Include="Views\Renaper\PagoMercadoPago.cshtml" />
+    <Content Include="Secrets.config" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

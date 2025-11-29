@@ -1,14 +1,16 @@
 ﻿using Newtonsoft.Json;
 using RenaperWeb.Models;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 
 public class RenaperController : Controller
 {
-    private readonly string URL_BASE = "https://localhost:44328/api/Personas";
-    private readonly string MI_API_KEY = "renaper-12345-seguro";
+    private readonly string URL_RENAPER_BASE = ConfigurationManager.AppSettings["RenaperApiUrl"];
+    private readonly string MI_API_KEY = ConfigurationManager.AppSettings["RenaperApiKey"];
+    private readonly string URL_MP_API = ConfigurationManager.AppSettings["MercadoPagoApiUrl"];
 
     public ActionResult Index()
     {
@@ -22,7 +24,7 @@ public class RenaperController : Controller
         using (var client = new HttpClient())
         {
             client.DefaultRequestHeaders.Add("X-API-KEY", MI_API_KEY);
-            var response = await client.GetAsync(URL_BASE);
+            var response = await client.GetAsync(URL_RENAPER_BASE);
             if (response.IsSuccessStatusCode)
             {
                 var json = await response.Content.ReadAsStringAsync();
@@ -40,7 +42,7 @@ public class RenaperController : Controller
         using (var client = new HttpClient())
         {
             client.DefaultRequestHeaders.Add("X-API-KEY", MI_API_KEY);
-            var response = await client.GetAsync($"{URL_BASE}/Dni/{dniBuscado}");
+            var response = await client.GetAsync($"{URL_RENAPER_BASE}/Dni/{dniBuscado}");
 
             if (response.IsSuccessStatusCode)
             {
@@ -93,7 +95,7 @@ public class RenaperController : Controller
         using (var client = new HttpClient())
         {
             client.DefaultRequestHeaders.Add("X-API-KEY", MI_API_KEY);
-            var response = await client.GetAsync($"{URL_BASE}/Dni/{dni}");
+            var response = await client.GetAsync($"{URL_RENAPER_BASE}/Dni/{dni}");
             if (response.IsSuccessStatusCode)
             {
                 var json = await response.Content.ReadAsStringAsync();
