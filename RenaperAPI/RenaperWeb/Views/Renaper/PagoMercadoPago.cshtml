@@ -1,24 +1,24 @@
 ﻿@model RenaperWeb.Models.PersonaViewModel
 @{
-    ViewBag.Title = "Mercado Pago - Checkout";
+    ViewBag.Title = "Pagar con Tarjeta";
 }
 
 <div class="max-w-lg mx-auto mt-6 fade-in">
 
     <div class="flex justify-between items-center mb-6">
-        <h2 class="text-xl font-bold text-slate-700">Pagar con Tarjeta</h2>
+        <h2 class="text-xl font-bold text-slate-700">Checkout</h2>
         <div class="flex items-center gap-2">
             <span class="text-xs font-bold text-slate-400">Powered by</span>
             <span class="font-bold mp-text text-lg">mercadopago</span>
         </div>
     </div>
 
-    <div id="ui-formulario" class="bg-white rounded-xl shadow-lg overflow-hidden border border-slate-200">
+    <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-slate-200">
 
         <div class="mp-bg p-6 text-white flex justify-between items-end">
             <div>
                 <p class="text-xs opacity-80 uppercase tracking-wider">Total a pagar</p>
-                <p class="text-3xl font-bold">$1.500<span class="text-lg">.00</span></p>
+                <p class="text-3xl font-bold">$60,00<span class="text-lg">.00</span></p>
             </div>
             <div class="text-right">
                 <p class="text-xs opacity-80">Referencia</p>
@@ -27,73 +27,74 @@
         </div>
 
         <div class="p-8">
-            <form id="form-pago" onsubmit="event.preventDefault(); simularProcesamiento();">
+            @using (Html.BeginForm("ProcesarPagoMP", "Renaper", FormMethod.Post, new { id = "form-pago" }))
+            {
+                <input type="hidden" name="DNI" value="@Model.DNI" />
 
                 <div class="mb-5">
                     <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Número de tarjeta</label>
                     <div class="relative">
-                        <input type="text" maxlength="19" placeholder="0000 0000 0000 0000" class="mp-input w-full p-3 rounded-lg font-mono text-slate-700 text-lg" required>
+                        <input type="text" name="CardNumber" maxlength="16" placeholder="0000000000000000" class="mp-input w-full p-3 rounded-lg font-mono text-slate-700 text-lg" required>
                         <i class="fa-regular fa-credit-card absolute right-4 top-4 text-slate-400"></i>
                     </div>
+                    <p class="text-xs text-slate-400 mt-1">Ingresa los 16 dígitos sin espacios</p>
                 </div>
 
                 <div class="mb-5">
-                    <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Nombre y Apellido</label>
-                    <input type="text" placeholder="Como figura en la tarjeta" class="mp-input w-full p-3 rounded-lg text-slate-700 uppercase" required>
+                    <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Nombre del Titular</label>
+                    <input type="text" name="CardHolderName" placeholder="COMO FIGURA EN LA TARJETA" class="mp-input w-full p-3 rounded-lg text-slate-700 uppercase" required>
                 </div>
 
                 <div class="flex gap-4 mb-5">
                     <div class="w-1/2">
-                        <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Vencimiento</label>
-                        <input type="text" placeholder="MM/AA" maxlength="5" class="mp-input w-full p-3 rounded-lg text-center font-mono" required>
+                        <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Vencimiento (MMYY)</label>
+                        <input type="text" name="CardExpirationDate" placeholder="1225" maxlength="4" class="mp-input w-full p-3 rounded-lg text-center font-mono" required>
                     </div>
                     <div class="w-1/2">
                         <label class="block text-xs font-bold text-slate-500 uppercase mb-1">CVV</label>
                         <div class="relative">
-                            <input type="password" maxlength="4" placeholder="123" class="mp-input w-full p-3 rounded-lg text-center font-mono" required>
+                            <input type="password" name="CardCvv" maxlength="4" placeholder="123" class="mp-input w-full p-3 rounded-lg text-center font-mono" required>
                             <i class="fa-solid fa-lock absolute right-4 top-4 text-slate-300 text-xs"></i>
                         </div>
                     </div>
                 </div>
 
                 <div class="mb-8">
-                    <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Email del titular</label>
-                    <input type="email" placeholder="ejemplo@email.com" class="mp-input w-full p-3 rounded-lg text-slate-700" required>
+                    <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Email</label>
+                    <input type="email" name="ClientEmail" placeholder="tu@email.com" class="mp-input w-full p-3 rounded-lg text-slate-700" required>
                 </div>
 
-                <button type="submit" class="w-full mp-bg mp-btn text-white font-bold py-4 rounded-lg shadow-md transition transform active:scale-95 flex justify-center items-center gap-2">
-                    Pagar $1.500,00
+                <button type="submit" id="btn-pagar" class="w-full mp-bg mp-btn text-white font-bold py-4 rounded-lg shadow-md transition transform active:scale-95 flex justify-center items-center gap-2">
+                    Pagar Ahora
                     <i class="fa-solid fa-arrow-right"></i>
                 </button>
-            </form>
+            }
+
+            @if (ViewBag.ErrorPago != null)
+            {
+                <div class="mt-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded text-sm text-center fade-in">
+                    <i class="fa-solid fa-circle-exclamation mr-1"></i> @ViewBag.ErrorPago
+                </div>
+            }
 
             <div class="mt-6 text-center">
                 <a href="@Url.Action("SeleccionPago", new { dni = Model.DNI })" class="text-xs text-slate-400 hover:text-slate-600 flex items-center justify-center gap-1">
-                    <i class="fa-solid fa-arrow-left"></i> Cambiar medio de pago
+                    <i class="fa-solid fa-arrow-left"></i> Volver atrás
                 </a>
-            </div>
-
-            <div class="mt-4 flex justify-center gap-3 opacity-40 grayscale">
-                <i class="fa-brands fa-cc-visa text-2xl"></i>
-                <i class="fa-brands fa-cc-mastercard text-2xl"></i>
-                <i class="fa-brands fa-cc-amex text-2xl"></i>
             </div>
         </div>
     </div>
 
-    <div id="ui-procesando" class="hidden bg-white rounded-xl shadow-lg p-12 text-center border-t-4 border-[#009ee3]">
-        <div class="inline-block animate-spin rounded-full h-14 w-14 border-t-4 border-b-4 border-[#009ee3] mb-6"></div>
-        <h3 class="text-xl font-bold text-slate-800 mb-2">Procesando pago...</h3>
-        <p class="text-slate-500">Estamos validando tu tarjeta con el banco.</p>
+    <div id="loader-overlay" class="hidden fixed inset-0 bg-white/80 z-50 flex items-center justify-center backdrop-blur-sm">
+        <div class="text-center">
+            <div class="inline-block animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-[#009ee3] mb-4"></div>
+            <h3 class="text-lg font-bold text-slate-700">Procesando pago...</h3>
+        </div>
     </div>
 </div>
 
 <script>
-    function simularProcesamiento() {
-        document.getElementById('ui-formulario').classList.add('hidden');
-        document.getElementById('ui-procesando').classList.remove('hidden');
-        setTimeout(function() {
-            window.location.href = '@Url.Action("Ficha", new { dni = Model.DNI })';
-        }, 3000);
-    }
+    document.getElementById('form-pago').addEventListener('submit', function () {
+        document.getElementById('loader-overlay').classList.remove('hidden');
+    });
 </script>

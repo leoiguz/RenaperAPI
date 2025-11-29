@@ -1,10 +1,25 @@
-﻿< !DOCTYPE html >
-< html >
-< head >
-    < meta charset = "utf-8" />
-    < title ></ title >
-</ head >
-< body >
+﻿using System.ComponentModel.DataAnnotations;
 
-</ body >
-</ html >
+namespace RenaperWeb.Models
+{
+    public class PagoTarjetaViewModel
+    {
+        public int DNI { get; set; }
+
+        [Required]
+        public string CardNumber { get; set; }
+
+        [Required]
+        public string CardHolderName { get; set; }
+
+        [Required]
+        public string CardExpirationDate { get; set; }
+
+        [Required]
+        public string CardCvv { get; set; }
+
+        [Required]
+        [EmailAddress]
+        public string ClientEmail { get; set; }
+    }
+}
