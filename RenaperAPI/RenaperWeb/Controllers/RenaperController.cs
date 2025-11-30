@@ -1,8 +1,11 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using RenaperWeb.Models;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 
@@ -70,6 +73,53 @@ public class RenaperController : Controller
         var persona = await ObtenerPersonaPorDni(dni);
         if (persona == null) return RedirectToAction("Buscador");
         return View(persona);
+    }
+
+    [HttpPost]
+    public async Task<ActionResult> IniciarPagoExterno(int dni, string clientEmail)
+    {
+        try
+        {
+            var persona = await ObtenerPersonaPorDni(dni);
+
+            using (var client = new HttpClient())
+            {
+                var paymentData = new
+                {
+                    description = $"Consulta Renaper - DNI {dni}",
+                    paymentAmount = 60.00,
+                    notificationUrl = "https://tu-sitio-real.com/webhook", // URL ficticia por ahora
+                    apiKey = "tu-api-key-demo", // Clave demo
+                    clientEmail,
+                    clientName = $"{persona.Nombres} {persona.Apellido}",
+                    backUrl = Url.Action("Ficha", "Renaper", new { dni }, Request.Url.Scheme)
+                };
+
+                var content = new StringContent(JsonConvert.SerializeObject(paymentData), Encoding.UTF8, "application/json");
+
+                var response = await client.PostAsync(URL_MP_API, content);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var jsonResponse = await response.Content.ReadAsStringAsync();
+                    dynamic data = JObject.Parse(jsonResponse);
+
+                    string externalUrl = data.paymentRoute;
+
+                    return Redirect(externalUrl);
+                }
+                else
+                {
+                    ViewBag.Error = "La pasarela de pago rechazó la solicitud.";
+                    return View("PagoMercadoPago", persona);
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            ViewBag.Error = "Error de conexión: " + ex.Message;
+            return RedirectToAction("Buscador");
+        }
     }
 
     // VISTA DE PAGO (Actualmente es Pago Fácil)
