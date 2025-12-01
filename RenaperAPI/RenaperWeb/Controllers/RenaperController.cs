@@ -1,14 +1,19 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using RenaperWeb.Models;
+using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 
 public class RenaperController : Controller
 {
-    private readonly string URL_BASE = "https://localhost:44328/api/Personas";
-    private readonly string MI_API_KEY = "renaper-12345-seguro";
+    private readonly string URL_RENAPER_BASE = ConfigurationManager.AppSettings["RenaperApiUrl"];
+    private readonly string MI_API_KEY = ConfigurationManager.AppSettings["RenaperApiKey"];
+    private readonly string URL_MP_API = ConfigurationManager.AppSettings["MercadoPagoApiUrl"];
 
     public ActionResult Index()
     {
@@ -22,7 +27,7 @@ public class RenaperController : Controller
         using (var client = new HttpClient())
         {
             client.DefaultRequestHeaders.Add("X-API-KEY", MI_API_KEY);
-            var response = await client.GetAsync(URL_BASE);
+            var response = await client.GetAsync(URL_RENAPER_BASE);
             if (response.IsSuccessStatusCode)
             {
                 var json = await response.Content.ReadAsStringAsync();
@@ -32,7 +37,7 @@ public class RenaperController : Controller
         return View(personas);
     }
 
-    // BUSCADOR (Modificado para flujo directo)
+    // BUSCADOR: redirige a 'SeleccionPago'
     public async Task<ActionResult> Buscador(int? dniBuscado)
     {
         if (dniBuscado == null) return View();
@@ -40,12 +45,11 @@ public class RenaperController : Controller
         using (var client = new HttpClient())
         {
             client.DefaultRequestHeaders.Add("X-API-KEY", MI_API_KEY);
-            var response = await client.GetAsync($"{URL_BASE}/Dni/{dniBuscado}");
+            var response = await client.GetAsync($"{URL_RENAPER_BASE}/Dni/{dniBuscado}");
 
             if (response.IsSuccessStatusCode)
             {
-                // CAMBIO: Redirige directo al Pago, sin selección intermedia
-                return RedirectToAction("Pago", new { dni = dniBuscado });
+                return RedirectToAction("SeleccionPago", new { dni = dniBuscado });
             }
             else
             {
@@ -55,15 +59,79 @@ public class RenaperController : Controller
         }
     }
 
-    // VISTA DEL CUPÓN (La llamaremos simplemente "Pago")
-    public async Task<ActionResult> Pago(int dni)
+    //Pantalla de Selección
+    public async Task<ActionResult> SeleccionPago(int dni)
     {
         var persona = await ObtenerPersonaPorDni(dni);
         if (persona == null) return RedirectToAction("Buscador");
         return View(persona);
     }
 
-    // FICHA FINAL
+    // VISTA DE PAGO CON MERCADO PAGO
+    public async Task<ActionResult> PagoMercadoPago(int dni)
+    {
+        var persona = await ObtenerPersonaPorDni(dni);
+        if (persona == null) return RedirectToAction("Buscador");
+        return View(persona);
+    }
+
+    [HttpPost]
+    public async Task<ActionResult> IniciarPagoExterno(int dni, string clientEmail)
+    {
+        try
+        {
+            var persona = await ObtenerPersonaPorDni(dni);
+
+            using (var client = new HttpClient())
+            {
+                var paymentData = new
+                {
+                    description = $"Consulta Renaper - DNI {dni}",
+                    paymentAmount = 60.00,
+                    notificationUrl = "https://tu-sitio-real.com/webhook", // URL ficticia por ahora
+                    apiKey = "tu-api-key-demo", // Clave demo
+                    clientEmail,
+                    clientName = $"{persona.Nombres} {persona.Apellido}",
+                    backUrl = Url.Action("Ficha", "Renaper", new { dni }, Request.Url.Scheme)
+                };
+
+                var content = new StringContent(JsonConvert.SerializeObject(paymentData), Encoding.UTF8, "application/json");
+
+                var response = await client.PostAsync(URL_MP_API, content);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var jsonResponse = await response.Content.ReadAsStringAsync();
+                    dynamic data = JObject.Parse(jsonResponse);
+
+                    string externalUrl = data.paymentRoute;
+
+                    return Redirect(externalUrl);
+                }
+                else
+                {
+                    ViewBag.Error = "La pasarela de pago rechazó la solicitud.";
+                    return View("PagoMercadoPago", persona);
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            ViewBag.Error = "Error de conexión: " + ex.Message;
+            return RedirectToAction("Buscador");
+        }
+    }
+
+    // VISTA DE PAGO (Actualmente es Pago Fácil)
+    public async Task<ActionResult> PagoPagoFacil(int dni)
+    {
+        var persona = await ObtenerPersonaPorDni(dni);
+        if (persona == null) return RedirectToAction("Buscador");
+
+        return View(persona);
+    }
+
+    // VISTA DE FICHA FINAL
     public async Task<ActionResult> Ficha(int dni)
     {
         var persona = await ObtenerPersonaPorDni(dni);
@@ -71,13 +139,13 @@ public class RenaperController : Controller
         return View(persona);
     }
 
-    // Helper
+    // Helper para reutilizar código de llamada a API
     private async Task<PersonaViewModel> ObtenerPersonaPorDni(int dni)
     {
         using (var client = new HttpClient())
         {
             client.DefaultRequestHeaders.Add("X-API-KEY", MI_API_KEY);
-            var response = await client.GetAsync($"{URL_BASE}/Dni/{dni}");
+            var response = await client.GetAsync($"{URL_RENAPER_BASE}/Dni/{dni}");
             if (response.IsSuccessStatusCode)
             {
                 var json = await response.Content.ReadAsStringAsync();

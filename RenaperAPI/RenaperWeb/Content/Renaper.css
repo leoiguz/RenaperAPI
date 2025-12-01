@@ -1,0 +1,63 @@
+﻿/* =========================================
+   ESTILOS GENERALES (Animaciones)
+   ========================================= */
+.fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* =========================================
+   ESTILOS TICKET (PAGO FÁCIL)
+   ========================================= */
+.barcode {
+    height: 50px;
+    width: 100%;
+    /* Genera barras aleatorias visuales */
+    background: repeating-linear-gradient(90deg, #000 0px, #000 2px, transparent 2px, transparent 4px, #000 4px, #000 5px, transparent 5px, transparent 7px, #000 7px, #000 10px, transparent 10px, transparent 12px);
+    opacity: 0.8;
+}
+
+.ticket-border {
+    /* Efecto de bordes dentados */
+    background-image: radial-gradient(circle at top left, transparent 10px, #fff 11px), radial-gradient(circle at top right, transparent 10px, #fff 11px), radial-gradient(circle at bottom left, transparent 10px, #fff 11px), radial-gradient(circle at bottom right, transparent 10px, #fff 11px);
+    background-position: top left, top right, bottom left, bottom right;
+    background-repeat: no-repeat;
+    background-size: 51% 51%;
+}
+
+/* =========================================
+   ESTILOS MERCADO PAGO
+   ========================================= */
+.mp-bg {
+    background-color: #009ee3;
+}
+
+.mp-text {
+    color: #009ee3;
+}
+
+.mp-btn:hover {
+    background-color: #0081b9;
+}
+
+.mp-input {
+    transition: all 0.2s;
+    border: 1px solid #e2e8f0;
+}
+
+    .mp-input:focus {
+        border-color: #009ee3;
+        box-shadow: 0 0 0 2px rgba(0, 158, 227, 0.2);
+        outline: none;
+    }

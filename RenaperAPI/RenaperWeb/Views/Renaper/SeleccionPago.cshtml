@@ -1,0 +1,45 @@
+﻿@model RenaperWeb.Models.PersonaViewModel
+@{
+    ViewBag.Title = "Seleccionar Medio de Pago";
+}
+
+<div class="max-w-3xl mx-auto mt-10 fade-in">
+
+    <div class="text-center mb-8">
+        <h2 class="text-2xl font-bold text-slate-800">Seleccione Método de Pago</h2>
+        <p class="text-slate-500">Para ver el informe del DNI <span class="font-mono font-bold">@Model.DNI</span> debe abonar el arancel.</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+        <a href="@Url.Action("PagoMercadoPago", new { dni = Model.DNI })" class="group block bg-white rounded-xl shadow-md border border-slate-200 overflow-hidden hover:shadow-xl hover:border-sky-400 transition transform hover:-translate-y-1">
+            <div class="h-2 bg-[#009ee3]"></div>
+            <div class="p-6 flex flex-col items-center text-center">
+                <div class="w-16 h-16 bg-sky-50 rounded-full flex items-center justify-center mb-4 group-hover:bg-[#009ee3] transition">
+                    <i class="fa-solid fa-qrcode text-2xl text-[#009ee3] group-hover:text-white transition"></i>
+                </div>
+                <h3 class="text-xl font-bold text-slate-800 mb-1">Mercado Pago</h3>
+                <p class="text-sm text-slate-500 mb-4">Dinero en cuenta, Débito o Crédito.</p>
+                <span class="text-[#009ee3] font-bold text-sm underline decoration-2 underline-offset-4 group-hover:no-underline">Pagar ahora &rarr;</span>
+            </div>
+        </a>
+
+        <a href="@Url.Action("PagoPagoFacil", new { dni = Model.DNI })" class="group block bg-white rounded-xl shadow-md border border-slate-200 overflow-hidden hover:shadow-xl hover:border-yellow-400 transition transform hover:-translate-y-1">
+            <div class="h-2 bg-[#facc15]"></div>
+            <div class="p-6 flex flex-col items-center text-center">
+                <div class="w-16 h-16 bg-yellow-50 rounded-full flex items-center justify-center mb-4 group-hover:bg-[#facc15] transition">
+                    <i class="fa-solid fa-barcode text-2xl text-yellow-600 group-hover:text-black transition"></i>
+                </div>
+                <h3 class="text-xl font-bold text-slate-800 mb-1">Pago Fácil</h3>
+                <p class="text-sm text-slate-500 mb-4">Cupón de pago en efectivo.</p>
+                <span class="text-yellow-600 font-bold text-sm underline decoration-2 underline-offset-4 group-hover:no-underline">Generar cupón &rarr;</span>
+            </div>
+        </a>
+    </div>
+
+    <div class="text-center mt-8">
+        <a href="@Url.Action("Buscador")" class="text-slate-400 hover:text-slate-600 text-sm">
+            <i class="fa-solid fa-arrow-left mr-1"></i> Cancelar y volver
+        </a>
+    </div>
+</div>

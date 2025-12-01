@@ -1,0 +1,56 @@
+﻿@model RenaperWeb.Models.PersonaViewModel
+@{
+    ViewBag.Title = "Checkout Mercado Pago";
+}
+
+<div class="max-w-md mx-auto mt-10 fade-in">
+
+    <div class="text-center mb-6">
+        <h2 class="text-2xl font-bold text-slate-800">Confirmar Pago</h2>
+        <p class="text-slate-500">Serás redirigido al sitio seguro de Mercado Pago.</p>
+    </div>
+
+    <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-slate-200">
+
+        <div class="bg-[#009ee3] p-6 text-white flex justify-between items-center">
+            <span class="font-bold text-lg">Resumen</span>
+            <span class="bg-white/20 text-sm px-3 py-1 rounded-full">Total: $60</span>
+        </div>
+
+        <div class="p-8">
+            <form action="@Url.Action("IniciarPagoExterno", "Renaper")" method="post" id="form-redirect">
+                <input type="hidden" name="dni" value="@Model.DNI" />
+
+                <div class="mb-6">
+                    <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Email para el comprobante</label>
+                    <input type="email" name="clientEmail" placeholder="tu@email.com" class="w-full p-3 border border-slate-300 rounded-lg focus:outline-none focus:border-[#009ee3] focus:ring-1 focus:ring-[#009ee3]" required />
+                    <p class="text-xs text-slate-400 mt-1">Requerido por Mercado Pago.</p>
+                </div>
+
+                <div class="space-y-3">
+                    <button type="submit" class="w-full bg-[#009ee3] hover:bg-[#0081b9] text-white font-bold py-3 px-6 rounded-lg shadow-md transition transform active:scale-95 flex justify-center items-center gap-2">
+                        Ir a Pagar
+                        <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                    </button>
+
+                    <a href="@Url.Action("SeleccionPago", new { dni = Model.DNI })" class="block text-center text-sm text-slate-400 hover:text-slate-600">
+                        Cancelar y volver
+                    </a>
+                </div>
+            </form>
+
+            <div id="loader" class="hidden mt-6 text-center">
+                <div class="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-[#009ee3]"></div>
+                <p class="text-xs text-[#009ee3] mt-2 font-bold">Generando link de pago...</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Feedback visual al hacer submit
+    document.getElementById('form-redirect').addEventListener('submit', function () {
+        this.querySelector('button').classList.add('opacity-50', 'cursor-not-allowed');
+        document.getElementById('loader').classList.remove('hidden');
+    });
+</script>

@@ -7,6 +7,8 @@
     <title>@ViewBag.Title - Renaper Consulta</title>
 
     @Styles.Render("~/Content/css")
+    <link href="@Url.Content("~/Content/Renaper.css")" rel="stylesheet" type="text/css" />
+
     @Scripts.Render("~/bundles/modernizr")
 
     <script src="https://cdn.tailwindcss.com"></script>
@@ -40,11 +42,10 @@
     </main>
 
     <footer class="text-center text-slate-400 text-sm py-6">
-        <p>&copy; @DateTime.Now.Year - Renaper</p>
+        <p>&copy; @DateTime.Now.Year - Renaper Proyecto</p>
     </footer>
 
     @Scripts.Render("~/bundles/jquery")
-    @* @Scripts.Render("~/bundles/bootstrap") *@
     @RenderSection("scripts", required: false)
 </body>
 </html>
