@@ -142,6 +142,7 @@
     <Content Include="RenaperContext.edmx.diagram">
       <DependentUpon>RenaperContext.edmx</DependentUpon>
     </Content>
+    <Content Include="Secrets.config" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

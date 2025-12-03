@@ -15,12 +15,14 @@ public class RenaperController : Controller
     private readonly string MI_API_KEY = ConfigurationManager.AppSettings["RenaperApiKey"];
     private readonly string URL_MP_API = ConfigurationManager.AppSettings["MercadoPagoApiUrl"];
 
+
+    private static Dictionary<int, string> _pagosRegistrados = new Dictionary<int, string>();
+
     public ActionResult Index()
     {
         return View();
     }
 
-    // LISTADO COMPLETO
     public async Task<ActionResult> Listado()
     {
         List<PersonaViewModel> personas = new List<PersonaViewModel>();
@@ -37,7 +39,6 @@ public class RenaperController : Controller
         return View(personas);
     }
 
-    // BUSCADOR: redirige a 'SeleccionPago'
     public async Task<ActionResult> Buscador(int? dniBuscado)
     {
         if (dniBuscado == null) return View();
@@ -59,7 +60,6 @@ public class RenaperController : Controller
         }
     }
 
-    //Pantalla de Selección
     public async Task<ActionResult> SeleccionPago(int dni)
     {
         var persona = await ObtenerPersonaPorDni(dni);
@@ -67,8 +67,14 @@ public class RenaperController : Controller
         return View(persona);
     }
 
-    // VISTA DE PAGO CON MERCADO PAGO
     public async Task<ActionResult> PagoMercadoPago(int dni)
+    {
+        var persona = await ObtenerPersonaPorDni(dni);
+        if (persona == null) return RedirectToAction("Buscador");
+        return View(persona);
+    }
+
+    public async Task<ActionResult> PagoPagoFacil(int dni)
     {
         var persona = await ObtenerPersonaPorDni(dni);
         if (persona == null) return RedirectToAction("Buscador");
@@ -88,15 +94,14 @@ public class RenaperController : Controller
                 {
                     description = $"Consulta Renaper - DNI {dni}",
                     paymentAmount = 60.00,
-                    notificationUrl = "https://tu-sitio-real.com/webhook", // URL ficticia por ahora
-                    apiKey = "tu-api-key-demo", // Clave demo
+                    notificationUrl = "https://tu-sitio.com/webhook",
+                    apiKey = "tu-api-key-demo",
                     clientEmail,
                     clientName = $"{persona.Nombres} {persona.Apellido}",
                     backUrl = Url.Action("Ficha", "Renaper", new { dni }, Request.Url.Scheme)
                 };
 
                 var content = new StringContent(JsonConvert.SerializeObject(paymentData), Encoding.UTF8, "application/json");
-
                 var response = await client.PostAsync(URL_MP_API, content);
 
                 if (response.IsSuccessStatusCode)
@@ -105,6 +110,19 @@ public class RenaperController : Controller
                     dynamic data = JObject.Parse(jsonResponse);
 
                     string externalUrl = data.paymentRoute;
+
+                    // Extraer y guardar el PaymentId
+                    string paymentId = externalUrl.Substring(externalUrl.LastIndexOf('/') + 1);
+
+                    // Guardamos en nuestra "BD" que este DNI inició un pago con este ID
+                    if (_pagosRegistrados.ContainsKey(dni))
+                    {
+                        _pagosRegistrados[dni] = paymentId;
+                    }
+                    else
+                    {
+                        _pagosRegistrados.Add(dni, paymentId);
+                    }
 
                     return Redirect(externalUrl);
                 }
@@ -122,24 +140,66 @@ public class RenaperController : Controller
         }
     }
 
-    // VISTA DE PAGO (Actualmente es Pago Fácil)
-    public async Task<ActionResult> PagoPagoFacil(int dni)
-    {
-        var persona = await ObtenerPersonaPorDni(dni);
-        if (persona == null) return RedirectToAction("Buscador");
-
-        return View(persona);
-    }
-
-    // VISTA DE FICHA FINAL
+    // FICHA
     public async Task<ActionResult> Ficha(int dni)
     {
+        // Verificamos si existe la persona
         var persona = await ObtenerPersonaPorDni(dni);
         if (persona == null) return RedirectToAction("Buscador");
-        return View(persona);
+
+        // Buscar un pago registrado para este DNI
+        if (!_pagosRegistrados.ContainsKey(dni))
+        {
+            // Si intentan entrar directo cambiando el DNI en la URL se redirecciona el usuario a la vista de pago
+            return RedirectToAction("SeleccionPago", new { dni = dni });
+        }
+
+        string paymentId = _pagosRegistrados[dni];
+
+        // Consultar a la API si el pago está APROBADO
+        bool estaPagado = await VerificarEstadoPago(paymentId);
+
+        if (estaPagado)
+        {
+            return View(persona);
+        }
+        else
+        {
+            // Si el pago existe pero está pendiente o fallido
+            ViewBag.Error = "El pago aún no ha sido aprobado. Por favor intente nuevamente o espere unos instantes.";
+            return RedirectToAction("SeleccionPago", new { dni });
+        }
     }
 
-    // Helper para reutilizar código de llamada a API
+    // Helper para verificar el pago con la API externa
+    private async Task<bool> VerificarEstadoPago(string paymentId)
+    {
+        try
+        {
+            using (var client = new HttpClient())
+            {
+                // GET /api/mercadopago/payment/[paymentId]
+                var response = await client.GetAsync($"{URL_MP_API}/payment/{paymentId}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var json = await response.Content.ReadAsStringAsync();
+                    dynamic data = JObject.Parse(json);
+
+                    // Verificamos el estado
+                    string status = data.payment.paymentStatus;
+                    return status == "approved";
+                }
+            }
+        }
+        catch
+        {
+            // Si falla la verificación, asumimos no pagado por seguridad
+            return false;
+        }
+        return false;
+    }
+
     private async Task<PersonaViewModel> ObtenerPersonaPorDni(int dni)
     {
         using (var client = new HttpClient())
