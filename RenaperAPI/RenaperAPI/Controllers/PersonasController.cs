@@ -131,5 +131,22 @@ namespace RenaperAPI.Controllers
 
             return Ok(persona); // Devuelve los datos de la persona
         }
+
+        // GET: api/Personas/Cuil/20-40111222-3
+        // Valida el CUIT/CUIL (formato y dígito verificador) y devuelve la persona si existe.
+        [Route("api/Personas/Cuil/{cuil}")]
+        [HttpGet]
+        [ResponseType(typeof(Personas))]
+        public async Task<IHttpActionResult> GetPersonaPorCuit(string cuil)
+        {
+            var persona = await db.Personas.FirstOrDefaultAsync(p => p.CUIL == cuil);
+
+            if (persona == null)
+            {
+                return NotFound(); // Devuelve 404 si el DNI no existe
+            }
+
+            return Ok(persona); // Devuelve los datos de la persona
+        }
     }
 }
